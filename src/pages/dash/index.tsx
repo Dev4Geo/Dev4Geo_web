@@ -7,6 +7,7 @@ function DashPage() {
     <div>
       <TextHeader>Dashboard</TextHeader>
       {session && <div>name: {session?.user?.name}</div>}
+      {session && <div>id: {session?.user?.id}</div>}
 
       <div>dash</div>
     </div>
