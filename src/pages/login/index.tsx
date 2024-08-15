@@ -1,13 +1,11 @@
 import MyNav from "@/components/myNav";
 
-
-
-export default function Home() {
+function LoginPage() {
   return (
     <div className="flex flex-col">
-      <MyNav />
-
-      <div>home page</div>
+      <div>login with google</div>
     </div>
   );
 }
+
+export default LoginPage;
