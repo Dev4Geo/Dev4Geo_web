@@ -1,4 +1,3 @@
-import MyNav from "@/components/myNav";
 import TextHeader from "@/components/textHeader";
 
 

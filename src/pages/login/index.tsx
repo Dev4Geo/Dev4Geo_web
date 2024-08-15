@@ -1,4 +1,3 @@
-import MyNav from "@/components/myNav";
 
 function LoginPage() {
   return (
