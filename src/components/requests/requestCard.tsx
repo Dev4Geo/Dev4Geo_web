@@ -12,6 +12,11 @@ function RequestCard({ request, me }: RequestCardProps) {
   const { setRequests } = useRequestStore();
 
   async function handleDelete(me: string) {
+    const confirm = await window.confirm("Are you sure you want to delete this request?");
+    if (!confirm) {
+      return;
+    }
+
     const res = await delRequest({ id: me });
     if (res.status === "error") {
       console.error(res.message);
