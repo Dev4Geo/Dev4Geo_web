@@ -1,7 +1,7 @@
 import { RequestType } from "./index";
 function RequestCard({request}: {request: RequestType}) {
   return (
-    <div key={request._id} className="bg-blue-900 my-1">
+    <div className="bg-blue-900 my-1">
       <h2>title: {request.title}</h2>
       <p>desc: {request.desc}</p>
     </div>

@@ -1,18 +1,16 @@
 import TextHeader from "@/components/textHeader";
 import RequestCard from "./requestCard";
-import { redirect } from "next/navigation";
 import Link from "next/link";
+import { useEffect } from "react";
+import fetchAllRequest from "./fetch";
+import useRequestStore from "@/store/requestStore";
 
 export async function getServerSideProps() {
-  const res = await fetch(`${process.env.HOST}/api/request/read`);
-  if (!res.ok) {
-    console.error("Failed to fetch");
-  }
-  const data = await res.json();
+  const data = await fetchAllRequest();
 
   return {
     props: {
-      requests: data.data,
+      requests: data,
     },
   };
 }
@@ -35,6 +33,13 @@ export type RequestPageProps = {
 };
 
 function RequestPage(props: RequestPageProps) {
+  const { requests, setRequests } = useRequestStore();
+
+  useEffect(() => {
+    setRequests(props.requests);
+  }, []);
+
+  const data = requests.length > 0 ? requests : props.requests;
   return (
     <div>
       <div className="flex flex-col mx-10 space-y-2">
@@ -44,8 +49,8 @@ function RequestPage(props: RequestPageProps) {
             <Link href="/new_request">+</Link>
           </div>
         </div>
-        {props.requests.map((request) => (
-          <RequestCard request={request} />
+        {data.map((request) => (
+          <RequestCard key={request._id} request={request} />
         ))}
       </div>
     </div>
