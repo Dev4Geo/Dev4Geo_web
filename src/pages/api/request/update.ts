@@ -23,7 +23,7 @@ async function editRequest(req: NextApiRequest, res: NextApiResponse) {
   if (isDevMode && !session?.user?.id) {
     session = {
       user: {
-        id: new mongoose.Types.ObjectId(),
+        oid: new mongoose.Types.ObjectId(),
       },
       expires: "123",
     };
@@ -35,7 +35,7 @@ async function editRequest(req: NextApiRequest, res: NextApiResponse) {
   await dbConnect();
 
   const updatedRequest = await request.findOneAndUpdate(
-    { _id: id, user_id: session.user.id },
+    { _id: id, user_id: session.user.oid.toString() },
     { title, desc, updated_at: new Date() },
     {
       new: true, // return new document instead of old one

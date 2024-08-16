@@ -1,10 +1,11 @@
-import NextAuth from "next-auth";
+import NextAuth, { getServerSession, Session } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import User from "@/models/User";
 import { dbConnect } from "@/lib/mongo";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default NextAuth({
+const authOptions = {
   providers: [
     GitHubProvider({
       clientId: process.env.GITHUB_CLIENT_ID || "",
@@ -30,36 +31,32 @@ export default NextAuth({
     }),
   ],
   callbacks: {
-    async signIn({ user, account }) {
+    async signIn({ user, account }: any) {
       if (!account) {
-        console.log('---no account')
+        console.log("---no account");
         return false;
       }
 
       const { email, name, image } = user;
-      const { providerAccountId, provider } = account;
 
       await dbConnect();
 
       try {
-        let existingUser  = await User.findOne({ email, provider });
+        let existingUser = await User.findOne({ email });
 
         if (!existingUser) {
           existingUser = await User.create({
             name,
             email,
             image,
-            providerId: providerAccountId,
-            provider,
           });
           console.log(
-            `New user created: ${existingUser.name} (${existingUser.email}, ${existingUser.provider})`
+            `New user created: ${existingUser.name} (${existingUser.email})`
           );
         } else {
-          existingUser.providerId = providerAccountId;
           await existingUser.save();
           console.log(
-            `User updated: ${existingUser.name} (${existingUser.email}, ${existingUser.provider})`
+            `User updated: ${existingUser.name} (${existingUser.email})`
           );
         }
         return true;
@@ -71,22 +68,40 @@ export default NextAuth({
     async redirect() {
       return "/dash";
     },
-    async session({ session }) {
+    async session({ session }: any) {
+      if (typeof session.user?.email === "undefined") {
+        return session;
+      }
       await dbConnect();
       const existingUser = await User.findOne({
         email: session.user?.email,
-        provider: session.user?.provider,
       });
       if (existingUser) {
-        session.user.id = existingUser._id;
+        session.user.oid = existingUser._id;
       }
       return session;
     },
-    async jwt({ token, account }) {
-      if (account) {
-        token.sub = account.providerAccountId; // Google or GitHub user ID
-      }
+    async jwt({ token }: any) {
       return token;
     },
   },
-});
+  session: {
+    strategy: "jwt",
+  },
+  jwt: {
+    secret: process.env.JWT_SECRET,
+  },
+};
+
+export async function getAuth(
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<Session | null> {
+  const session: Session | null = await getServerSession(
+    req,
+    res,
+    authOptions as any
+  );
+  return session;
+}
+export default NextAuth(authOptions as any);

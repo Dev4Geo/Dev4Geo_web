@@ -38,7 +38,7 @@ async function deleteRequest(req: NextApiRequest, res: NextApiResponse) {
 
   const deletedRequest = await request.findOneAndDelete({
     _id: id,
-    user_id: session.user.id,
+    user_id: session.user.oid.toString(),
   });
 
   if (!deletedRequest) {

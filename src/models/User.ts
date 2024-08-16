@@ -12,11 +12,9 @@ const UserSchema: Schema<IUser> = new Schema({
   name: { type: String, required: true },
   email: { type: String, required: true },
   image: { type: String },
-  providerId: { type: String, required: true },
-  provider: { type: String, required: true },
 });
 
 const User: Model<IUser> =
-  mongoose.models.XUser || mongoose.model("XUser", UserSchema);
+  mongoose.models.User || mongoose.model("User", UserSchema);
 
 export default User;
