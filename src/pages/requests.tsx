@@ -54,7 +54,7 @@ function RequestPage(props: RequestPageProps) {
           </Link>
         </div>
         {data.map((request) => (
-          <RequestCard key={request._id} request={request} />
+          <RequestCard key={request._id} request={request} me={me} />
         ))}
       </div>
     </div>

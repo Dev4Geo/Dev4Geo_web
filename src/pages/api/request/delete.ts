@@ -2,7 +2,8 @@ import { dbConnect } from "@/lib/mongo";
 import { NextApiRequest, NextApiResponse } from "next";
 import request from "@/models/request";
 import { isJSONRequest } from "@/utils/apiUtils";
-import { getSession } from "next-auth/react";
+import { getAuth } from "../auth/[...nextauth]";
+import mongoose from "mongoose";
 
 async function deleteRequest(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "DELETE") {
@@ -16,10 +17,11 @@ async function deleteRequest(req: NextApiRequest, res: NextApiResponse) {
 
   const { id } = req.body;
   const isDevMode = process.env.NODE_ENV === "development";
-  if (isDevMode) {
+  const debug = process.env.DEBUG === "true";
+  if (isDevMode && debug) {
     await dbConnect();
     const deletedRequest = await request.findOneAndDelete({
-      _id: id,
+      _id: mongoose.Types.ObjectId.createFromHexString(id),
     });
     if (!deletedRequest) {
       return res
@@ -29,22 +31,24 @@ async function deleteRequest(req: NextApiRequest, res: NextApiResponse) {
     return res.status(200).json({ status: "ok", data: deletedRequest });
   }
 
-  let session = await getSession({ req });
-  if (!session?.user?.id) {
+  let session = await getAuth(req, res);
+  if (!session?.user?.oid) {
     return res.status(401).json({ status: "error", message: "Unauthorized" });
   }
 
   await dbConnect();
 
-  const deletedRequest = await request.findOneAndDelete({
-    _id: id,
+  const dat = {
+    _id: mongoose.Types.ObjectId.createFromHexString(id),
     user_id: session.user.oid.toString(),
-  });
+  };
+
+  const deletedRequest = await request.findOneAndDelete(dat);
 
   if (!deletedRequest) {
     return res
-      .status(404)
-      .json({ status: "error", message: "Request not found" });
+      .status(400)
+      .json({ status: "error", message: "Document not found" });
   }
 
   return res.status(200).json({ status: "ok", data: deletedRequest });
