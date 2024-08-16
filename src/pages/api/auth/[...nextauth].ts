@@ -78,7 +78,7 @@ export default NextAuth({
         provider: session.user?.provider,
       });
       if (existingUser) {
-        session.user.id = `${existingUser._id}`;
+        session.user.id = existingUser._id;
       }
       return session;
     },

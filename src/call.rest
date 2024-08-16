@@ -1,1 +1,42 @@
-GET http://localhost:3000/api/user/getAll
+
+
+###
+GET http://localhost:3000/api/user/read
+
+###
+GET http://localhost:3000/api/request/read
+###
+GET http://localhost:3000/api/request/read?page=1
+###
+GET http://localhost:3000/api/request/read?page=2
+###
+POST http://localhost:3000/api/request/create
+Content-Type: application/json
+
+{
+    "title": "r 8",
+    "desc": "created"
+}
+
+###
+PUT http://localhost:3000/api/request/update
+Content-Type: application/json
+
+{
+    "id": "66bf01e8a5986c878314412f",
+    "title": "req 6",
+    "desc": "edited"
+}
+
+
+###
+DELETE http://localhost:3000/api/request/delete
+Content-Type: application/json
+
+{
+    "id": "66bf0784a5986c8783144142"
+}
+###
+###
+###
+###
