@@ -1,5 +1,3 @@
-import { getSession } from "next-auth/react";
-
 type CreateNewRequestProps = {
   title: string;
   desc: string;
@@ -23,7 +21,6 @@ async function createNewRequest({ title, desc }: CreateNewRequestProps) {
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include",
     }
   );
 
