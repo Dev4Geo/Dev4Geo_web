@@ -2,16 +2,19 @@ import TextHeader from "@/components/shared/textHeader";
 import RequestCard from "@/components/requests/requestCard";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import fetchAllRequest from "@/components/fetch/allRequest";
 import useRequestStore, { RequestType } from "@/store/requestStore";
 import { useSession } from "next-auth/react";
+import makeRequest from "@/utils/makeRequest";
 
 export async function getServerSideProps() {
-  const data = await fetchAllRequest();
+  const data = await makeRequest({
+    endpoint: "/request/read",
+    method: "GET",
+  });
 
   return {
     props: {
-      requests: data,
+      requests: data.data,
     },
   };
 }
@@ -33,8 +36,7 @@ function RequestPage(props: RequestPageProps) {
   let data = requests.length > 0 ? requests : props.requests;
 
   const me = session?.user?.oid?.toString();
-  if (isOnlyMyRequests) {
-    data = data.filter((request) => request.user_id === me);
+  if (isOnlyMyRequests) { data = data.filter((request) => request.user_id === me);
   }
   return (
     <div>

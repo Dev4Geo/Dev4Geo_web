@@ -1,8 +1,7 @@
 import { useState } from "react";
-import createNewRequest from "@/components/fetch/createNewRequest";
 import router from "next/router";
 import useRequestStore from "@/store/requestStore";
-import fetchAllRequest from "@/components/fetch/allRequest";
+import makeRequest from "@/utils/makeRequest";
 
 const NewRequestPage = () => {
   const [title, setTitle] = useState("");
@@ -12,11 +11,17 @@ const NewRequestPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Call the createNewRequest function here
-    await createNewRequest({ title, desc: description });
+    await makeRequest({
+      endpoint: "/request/create",
+      method: "POST",
+      body: { title, desc: description}
+    });
 
     // fetch all requests again
-    const requests = await fetchAllRequest()
+    const requests = await makeRequest({
+      endpoint: "/request/read",
+      method: "GET",
+    })
     setRequests(requests)
 
     // Clear the form

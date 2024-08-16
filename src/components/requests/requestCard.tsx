@@ -1,7 +1,6 @@
 import useRequestStore, { RequestType } from "@/store/requestStore";
-import delRequest from "../fetch/deleteRequest";
-import fetchAllRequest from "../fetch/allRequest";
 import router from "next/router";
+import makeRequest from "@/utils/makeRequest";
 
 type RequestCardProps = {
   request: RequestType;
@@ -12,17 +11,27 @@ function RequestCard({ request, me }: RequestCardProps) {
   const { setRequests } = useRequestStore();
 
   async function handleDelete(me: string) {
-    const confirm = await window.confirm("Are you sure you want to delete this request?");
+    const confirm = window.confirm(
+      "Are you sure you want to delete this request?"
+    );
     if (!confirm) {
       return;
     }
 
-    const res = await delRequest({ id: me });
+    const res = await makeRequest({
+      endpoint: "/request/delete",
+      method: "DELETE",
+      body: { id: me },
+    });
+
     if (res.status === "error") {
       console.error(res.message);
     }
 
-    const requests = await fetchAllRequest();
+    const requests = await makeRequest({
+      endpoint: "/request/read",
+      method: "GET",
+    })
     setRequests(requests);
 
     router.push("/requests");
