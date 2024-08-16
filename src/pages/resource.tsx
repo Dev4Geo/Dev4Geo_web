@@ -1,4 +1,4 @@
-import TextHeader from "@/components/textHeader";
+import TextHeader from "@/components/shared/textHeader";
 
 function ResourcePage() {
   return (

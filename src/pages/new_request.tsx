@@ -1,8 +1,8 @@
 import { useState } from "react";
-import createNewRequest from "./createNewRequest";
+import createNewRequest from "@/components/fetch/createNewRequest";
 import router from "next/router";
 import useRequestStore from "@/store/requestStore";
-import fetchAllRequest from "../requests/fetch";
+import fetchAllRequest from "@/components/fetch/allRequest";
 
 const NewRequestPage = () => {
   const [title, setTitle] = useState("");
@@ -13,7 +13,7 @@ const NewRequestPage = () => {
     e.preventDefault();
 
     // Call the createNewRequest function here
-    createNewRequest({ title, desc: description });
+    await createNewRequest({ title, desc: description });
 
     // fetch all requests again
     const requests = await fetchAllRequest()
