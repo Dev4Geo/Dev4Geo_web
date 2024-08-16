@@ -31,11 +31,7 @@ const authOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account }: any) {
-      if (!account) {
-        console.log("---no account");
-        return false;
-      }
+    async signIn({ user }: any) {
 
       const { email, name, image } = user;
 

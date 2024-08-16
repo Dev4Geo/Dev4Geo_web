@@ -24,7 +24,7 @@ export default async function createRequest(
 
   let session = await getAuth(req, res);
 
-  if (isDevMode && !session?.user?.id) {
+  if (isDevMode && !session?.user?.oid) {
     session = {
       user: {
         oid: new mongoose.Types.ObjectId(),
