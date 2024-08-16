@@ -26,7 +26,6 @@ function MyNav() {
         {name && <div>name: {name}</div>}
         <NavItem href="/">home</NavItem>
         <NavItem href="/about">about</NavItem>
-        <NavItem href="/new_request">make a request</NavItem>
         <NavItem href="/requests">requests</NavItem>
         <NavItem href="/showcase">showcase</NavItem>
         <NavItem href="/resource">resource center</NavItem>
