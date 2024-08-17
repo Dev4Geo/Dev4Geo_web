@@ -2,6 +2,10 @@
 
 Dev4Geo is a collaborative platform where geologists and other users can request new programs or websites that benefit the geological community. This repository is open for contributions from developers who want to help build tools that make a difference in the field of geology.
 
+## Target Audience
+
+Dev4Geo is primarily designed for non-programmer users in the geological community. The platform makes it easy for geologists and other professionals to communicate their needs directly to developers without requiring technical expertise. Whether you're suggesting a new tool or requesting improvements to existing ones, the process is straightforward and user-friendly, ensuring that your ideas can be brought to life with minimal effort.
+
 ## Project Description
 
 Dev4Geo aims to connect geologists with developers to create useful tools, software, and websites tailored to the needs of the geological community. Users can submit requests for new features, tools, or entire projects, and developers can contribute by implementing these requests. The platform serves as a hub for collaboration, innovation, and community-driven development.
