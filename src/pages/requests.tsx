@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import useRequestStore, { RequestType } from "@/store/requestStore";
 import { useSession } from "next-auth/react";
 import makeRequest from "@/utils/makeRequest";
+import router from "next/router";
 
 export async function getServerSideProps() {
   const data = await makeRequest({
@@ -15,6 +16,7 @@ export async function getServerSideProps() {
   return {
     props: {
       requests: data.data,
+      // votedRequestIds: voted_requests.data,
     },
   };
 }
@@ -25,6 +27,7 @@ export type RequestPageProps = {
 
 function RequestPage(props: RequestPageProps) {
   const { requests, setRequests } = useRequestStore();
+  const { votedRequestIds, setVotedRequestIds } = useRequestStore();
   const [isOnlyMyRequests, setIsOnlyMyRequests] = useState(false);
 
   const { data: session } = useSession();
@@ -33,6 +36,17 @@ function RequestPage(props: RequestPageProps) {
     setRequests(props.requests);
   }, [props.requests, setRequests]);
 
+  useEffect(() => {
+    const func = async () => {
+      const voted_request_ids = await makeRequest({
+        endpoint: "/vote/read",
+        method: "GET",
+      });
+      setVotedRequestIds(voted_request_ids.data);
+    };
+    func();
+  }, []);
+
   let data = requests.length > 0 ? requests : props.requests;
 
   const me = session?.user?.oid?.toString();
@@ -40,28 +54,48 @@ function RequestPage(props: RequestPageProps) {
   if (isOnlyMyRequests) {
     data = data.filter((request) => request.user_id === me);
   }
+  const isAuth = typeof me !== "undefined";
+
+  const handleAddNewRequest = () => {
+    if (!isAuth) {
+      window.confirm("You need to login to add new request");
+      return;
+    }
+
+    router.push("/new_request");
+  };
   return (
     <div>
       <div className="flex flex-col mx-10 space-y-2">
         <div className="flex flex-row justify-between">
           <div className="flex flex-row items-center space-x-2">
             <TextHeader>Requests</TextHeader>
-            <div
-              onClick={() => setIsOnlyMyRequests((p) => !p)}
-              className="bg-green-600 p-1 rounded hover:cursor-pointer"
-            >
-              my requests
-            </div>
+            {isAuth && (
+              <div
+                onClick={() => setIsOnlyMyRequests((p) => !p)}
+                className="bg-green-600 p-1 rounded hover:cursor-pointer"
+              >
+                my requests
+              </div>
+            )}
           </div>
-          {typeof me !== "undefined" && (
-            <Link href="/new_request">
-              <div className="bg-green-600 text-white p-2 rounded-sm">+</div>
-            </Link>
-          )}
+          <div onClick={handleAddNewRequest}>
+            <div className="bg-green-600 text-white p-2 rounded-sm">+</div>
+          </div>
         </div>
-        {data.map((request) => (
-          <RequestCard key={request._id} request={request} me={me} />
-        ))}
+
+        {data.map((request, ind) =>
+          request ? (
+            <RequestCard
+              key={request._id}
+              request={request}
+              me={me}
+              isVote={votedRequestIds.includes(request?._id ?? "")}
+            />
+          ) : (
+            <div key={ind}></div>
+          )
+        )}
       </div>
     </div>
   );
