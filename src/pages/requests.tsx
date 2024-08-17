@@ -36,7 +36,9 @@ function RequestPage(props: RequestPageProps) {
   let data = requests.length > 0 ? requests : props.requests;
 
   const me = session?.user?.oid?.toString();
-  if (isOnlyMyRequests) { data = data.filter((request) => request.user_id === me);
+
+  if (isOnlyMyRequests) {
+    data = data.filter((request) => request.user_id === me);
   }
   return (
     <div>
@@ -51,9 +53,11 @@ function RequestPage(props: RequestPageProps) {
               my requests
             </div>
           </div>
-          <Link href="/new_request">
-            <div className="bg-green-600 text-white p-2 rounded-sm">+</div>
-          </Link>
+          {typeof me !== "undefined" && (
+            <Link href="/new_request">
+              <div className="bg-green-600 text-white p-2 rounded-sm">+</div>
+            </Link>
+          )}
         </div>
         {data.map((request) => (
           <RequestCard key={request._id} request={request} me={me} />

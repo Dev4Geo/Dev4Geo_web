@@ -2,7 +2,6 @@ import { dbConnect } from "@/lib/mongo";
 import { NextApiRequest, NextApiResponse } from "next";
 import request from "@/models/request";
 import { isJSONRequest } from "@/utils/apiUtils";
-import { getSession } from "next-auth/react";
 import mongoose from "mongoose";
 import { getAuth } from "../auth/[...nextauth]";
 
@@ -18,7 +17,6 @@ async function editRequest(req: NextApiRequest, res: NextApiResponse) {
   const isDevMode = process.env.NODE_ENV === "development";
 
   const { id, title, desc } = req.body;
-
 
   let session = await getAuth(req, res);
 
