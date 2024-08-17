@@ -12,10 +12,10 @@ type RequestCardProps = {
 function RequestCard({ request, me, isVote }: RequestCardProps) {
   const { setRequests } = useRequestStore();
   const { votedRequestIds, setVotedRequestIds } = useRequestStore();
+  const [nVotes, setNVotes] = useState(request.n_votes);
   if (!request) {
     return <div></div>;
   }
-  const [nVotes, setNVotes] = useState(request.n_votes);
 
   const handleDelete = async (id: string) => {
     const confirm = window.confirm(

@@ -1,6 +1,5 @@
 import TextHeader from "@/components/shared/textHeader";
 import RequestCard from "@/components/requests/requestCard";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import useRequestStore, { RequestType } from "@/store/requestStore";
 import { useSession } from "next-auth/react";
@@ -45,7 +44,7 @@ function RequestPage(props: RequestPageProps) {
       setVotedRequestIds(voted_request_ids.data);
     };
     func();
-  }, []);
+  }, [setVotedRequestIds]);
 
   let data = requests.length > 0 ? requests : props.requests;
 
