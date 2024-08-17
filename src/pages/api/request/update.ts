@@ -4,6 +4,7 @@ import request from "@/models/request";
 import { isJSONRequest } from "@/utils/apiUtils";
 import { getSession } from "next-auth/react";
 import mongoose from "mongoose";
+import { getAuth } from "../auth/[...nextauth]";
 
 async function editRequest(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "PUT") {
@@ -18,9 +19,10 @@ async function editRequest(req: NextApiRequest, res: NextApiResponse) {
 
   const { id, title, desc } = req.body;
 
-  let session = await getSession({ req });
 
-  if (isDevMode && !session?.user?.id) {
+  let session = await getAuth(req, res);
+
+  if (isDevMode && !session?.user?.oid) {
     session = {
       user: {
         oid: new mongoose.Types.ObjectId(),
@@ -28,7 +30,7 @@ async function editRequest(req: NextApiRequest, res: NextApiResponse) {
       expires: "123",
     };
   }
-  if (!session?.user?.id) {
+  if (!session?.user?.oid) {
     return res.status(401).json({ status: "error", message: "Unauthorized" });
   }
 
