@@ -2,7 +2,9 @@ import { create } from "zustand";
 
 interface RequestStore {
   requests: RequestType[];
+  votedRequestIds: string[];
   setRequests: (requests: RequestType[]) => void;
+  setVotedRequestIds: (ids: string[]) => void;
 }
 
 export type RequestType = {
@@ -19,7 +21,9 @@ export type RequestType = {
 };
 const useRequestStore = create<RequestStore>((set) => ({
   requests: [],
+  votedRequestIds: [],
   setRequests: (requests: RequestType[]) => set({ requests }),
+  setVotedRequestIds: (ids) => set({ votedRequestIds: ids }),
 }));
 
 export default useRequestStore;
