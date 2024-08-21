@@ -2,7 +2,6 @@ import { dbConnect } from "@/lib/mongo";
 import Vote from "@/models/vote";
 import Request from "@/models/request";
 
-import { isJSONRequest } from "@/utils/apiUtils";
 
 import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -14,11 +13,6 @@ export default async function deleteVote(
 ) {
   if (req.method !== "DELETE") {
     return res.status(405).json({ message: "Method Not Allowed" });
-  }
-  if (!isJSONRequest(req)) {
-    return res
-      .status(400)
-      .json({ message: "Content-Type must be application/json" });
   }
   const debug =
     process.env.NODE_ENV === "development" && process.env.DEBUG === "true";
