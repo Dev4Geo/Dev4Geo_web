@@ -10,7 +10,6 @@ export default async function createVote(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-    console.log('in--')
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method Not Allowed" });
   }
