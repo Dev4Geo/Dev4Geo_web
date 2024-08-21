@@ -107,6 +107,13 @@ function RequestCard({ request, me, isVote }: RequestCardProps) {
         >
           {isVote ? "voted" : "vote"}
         </div>
+
+        <div
+          onClick={() => router.push(`/request/${request._id}`)}
+          className="bg-white text-black w-fit p-1 m-1"
+        >
+          comment
+        </div>
       </div>
     </div>
   );
