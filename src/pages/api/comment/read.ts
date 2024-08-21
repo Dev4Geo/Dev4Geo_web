@@ -9,11 +9,9 @@ export default async function readComment(
   if (req.method !== "GET") {
     return res.status(405).json({ message: "Method Not Allowed" });
   }
-  //   const debug = process.env.NODE_ENV === "development" && process.env.DEBUG === "true";
   const limit = 20;
 
-//   const { request_id } = req.body;
-    const { id: request_id } = req.query;
+  const { id: request_id } = req.query;
   const { page } = req.query;
   const pageInt = parseInt(page as string, 10) || 1; // page start from 1
 

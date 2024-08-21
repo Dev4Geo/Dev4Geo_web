@@ -4,7 +4,7 @@ import VoteComment from "@/models/voteComment";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getAuth } from "../auth/[...nextauth]";
 
-export default async function readVote(
+export default async function readVoteComment(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -23,30 +23,14 @@ export default async function readVote(
   let session = await getAuth(req, res);
 
   if (!session?.user?.oid) {
-    console.log(session?.user);
     return res.status(200).json({ status: "success", data: [] });
   }
   await dbConnect();
 
-  const vote_counts = await VoteComment.aggregate([
-    {
-      $match: {
-        request_id: request_id,
-        user_id: session.user.oid.toString(),
-      },
-    },
-    {
-      $group: {
-        _id: "$comment_id",
-      },
-    },
-    {
-      $project: {
-        _id: 0,
-        comment_id: "$_id",
-      },
-    },
-  ]);
+  const vote_counts = await VoteComment.find({
+    request_id: request_id,
+    user_id: session.user.oid.toString(),
+  });
 
   // return list of strings of comment_id
   const comment_ids = vote_counts.map((vote) => vote.comment_id);
