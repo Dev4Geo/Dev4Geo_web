@@ -1,7 +1,6 @@
 import { dbConnect } from "@/lib/mongo";
 import Request from "@/models/request";
 import User from "@/models/User";
-import { isJSONRequest } from "@/utils/apiUtils";
 import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getAuth } from "../auth/[...nextauth]";
