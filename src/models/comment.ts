@@ -2,7 +2,7 @@
 
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-interface IComment extends Document {
+export interface IComment extends Document {
   request_id: string;
   user_id: string;
   user_name: string;
@@ -15,7 +15,7 @@ interface IComment extends Document {
 const CommentSchema: Schema<IComment> = new Schema({
     request_id: { type: String, required: true },
     user_id: { type: String, required: true },
-    user_name: { type: String, required: true },
+    user_name: { type: String },
     text: { type: String, required: true },
     n_votes: { type: Number, default: 0 },
     created_at: { type: Date, default: Date.now },
