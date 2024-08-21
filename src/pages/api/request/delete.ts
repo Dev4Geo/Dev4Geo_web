@@ -9,11 +9,6 @@ async function deleteRequest(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "DELETE") {
     return res.status(405).json({ message: "Method Not Allowed" });
   }
-  if (isJSONRequest(req)) {
-    return res
-      .status(400)
-      .json({ message: "Content-Type must be application/json" });
-  }
 
   const { id } = req.body;
   const isDevMode = process.env.NODE_ENV === "development";

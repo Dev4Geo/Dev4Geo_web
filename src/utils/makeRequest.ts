@@ -18,8 +18,14 @@ async function makeRequest({ endpoint, method, body }: RequestProps) {
     console.error(res);
   }
 
-  const data = await res.json();
-  return data;
+  try {
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to parse JSON response");
+    console.error(error);
+    return null;
+  }
 }
 
 export default makeRequest;

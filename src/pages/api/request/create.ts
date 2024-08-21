@@ -13,11 +13,6 @@ export default async function createRequest(
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method Not Allowed" });
   }
-  if (isJSONRequest(req)) {
-    return res
-      .status(400)
-      .json({ message: "Content-Type must be application/json" });
-  }
   const isDevMode = process.env.NODE_ENV === "development";
 
   const { title, desc } = req.body;
