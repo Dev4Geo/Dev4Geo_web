@@ -21,6 +21,7 @@ export async function getServerSideProps(context: any) {
     makeRequest({
       endpoint: "/vote_comment/read?id=" + id,
       method: "GET",
+      cookie: context.req.headers.cookie,
     }),
   ]);
 
@@ -55,7 +56,8 @@ function RequestPage({
   const username = session.data?.user?.name;
 
   const [comments, setComments] = useState<IComment[]>(propsComments);
-  const [voteCommentIds, setVoteCommentIds] = useState<string[]>(propsVoteCommentIds);
+  const [voteCommentIds, setVoteCommentIds] =
+    useState<string[]>(propsVoteCommentIds);
   if (!request) {
     return <div>not found request id: {request_id}</div>;
   }
@@ -159,7 +161,6 @@ function RequestPage({
         alert("Failed to delete vote");
         setComments(oldComments);
         setVoteCommentIds(oldVoteCommentIds);
-        
       }
     } else {
       const newComments = comments.map((comment) => {

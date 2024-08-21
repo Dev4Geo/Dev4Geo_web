@@ -2,14 +2,19 @@ type RequestProps = {
   endpoint: string;
   method: "POST" | "DELETE" | "GET" | "PUT" | "PATCH";
   body?: object;
+  cookie?: object;
 };
 
-async function makeRequest({ endpoint, method, body }: RequestProps) {
+async function makeRequest({ endpoint, method, body, cookie }: RequestProps) {
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  if (cookie) {
+    headers.append("cookie", JSON.stringify(cookie));
+  }
+
   const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/${endpoint}`, {
     method,
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: headers,
     body: body ? JSON.stringify(body) : undefined,
   });
 
