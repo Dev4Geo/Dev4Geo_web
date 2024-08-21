@@ -1,16 +1,21 @@
 import { IComment } from "@/models/comment";
 import { useState } from "react";
+import VoteBtn from "../shared/voteBtn";
 
 function Comment({
   comment,
   me,
   onUpdate,
   onDelete,
+  isVoted,
+  onVote,
 }: {
   comment: IComment;
   me: string;
   onUpdate: any;
   onDelete: any;
+  isVoted: boolean;
+  onVote: any;
 }) {
   const [init, setInit] = useState(comment);
   const [text, setText] = useState(init.text);
@@ -18,7 +23,9 @@ function Comment({
   const [isVisible, setIsVisible] = useState(true);
   const isAuth = me === comment.user_id;
   return (
-    <div className={`flex flex-row ${isVisible?"": "hidden"}`}>
+    <div
+      className={`${isVisible ? "" : "hidden"} flex flex-row bg-slate-700 px-5`}
+    >
       <div className="flex flex-col">
         {isEditing ? (
           <input
@@ -36,7 +43,15 @@ function Comment({
         <div>
           <div
             onClick={() =>
-              onUpdate(comment._id, text, setText, isEditing, setIsEditing, init, setInit)
+              onUpdate(
+                comment._id,
+                text,
+                setText,
+                isEditing,
+                setIsEditing,
+                init,
+                setInit
+              )
             }
             className="bg-yellow-500 w-fit p-1 m-1"
           >
@@ -50,6 +65,13 @@ function Comment({
           </div>
         </div>
       )}
+      <div>
+        <VoteBtn
+          isVoted={isVoted}
+          onClick={() => onVote(comment._id, isVoted)}
+          nVotes={comment.n_votes}
+        />
+      </div>
     </div>
   );
 }
