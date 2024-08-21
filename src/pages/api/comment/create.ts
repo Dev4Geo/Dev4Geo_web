@@ -46,21 +46,31 @@ export default async function createComment(
       .json({ status: "error", message: "Request not found" });
   }
 
-  const newRequest = await Comment.create({
+  const newComment = await Comment.create({
     request_id,
     user_id: session.user.oid.toString(),
     user_name: is_show_name ?? true ? session.user.name : undefined,
     text,
   });
 
-  const output = {
-    request_id: newRequest.request_id,
-    user_id: newRequest.user_id,
-    user_name: newRequest.user_name,
-    text: newRequest.text,
-    created_at: newRequest.created_at,
-    updated_at: newRequest.updated_at,
+  const hardUpdateNComments = async () => {
+    const nComments = await Comment.find({ request_id: request_id }).countDocuments();
+    const res = await Request.updateOne(
+      //
+      { _id: request_id },
+      { n_comments: nComments }
+    );
+  };
+  hardUpdateNComments();
+
+  const comment = {
+    request_id: newComment.request_id,
+    user_id: newComment.user_id,
+    user_name: newComment.user_name,
+    text: newComment.text,
+    created_at: newComment.created_at,
+    updated_at: newComment.updated_at,
   };
 
-  return res.status(201).json({ status: "ok", data: output });
+  return res.status(201).json({ status: "ok", data: comment });
 }

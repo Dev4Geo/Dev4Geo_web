@@ -112,7 +112,7 @@ function RequestCard({ request, me, isVote }: RequestCardProps) {
           onClick={() => router.push(`/request/${request._id}`)}
           className="bg-white text-black w-fit p-1 m-1"
         >
-          comment
+          comment [{request.n_comments}]
         </div>
       </div>
     </div>
