@@ -8,17 +8,27 @@ async function getAllRequests(req: NextApiRequest, res: NextApiResponse) {
   }
 
   const limit = 20;
+  const { id, page } = req.query;
 
   await dbConnect();
-  if (process.env.NODE_ENV === "development") {
-    const requests = await request.find({}).sort({ updated_at: -1 }).limit(100);
+
+  if (id) {
+    const this_request = await request.findOne({
+      _id: id,
+    });
+
+    if (!this_request) {
+      return res
+        .status(400)
+        .json({ status: "error", message: "Request not found" });
+    }
+
     return res.status(200).json({
       status: "ok",
-      data: requests,
+      data: this_request,
     });
   }
 
-  const { page } = req.query;
   const pageInt = parseInt(page as string, 10) || 1; // page start from 1
   const requests = await request
     .find({})
